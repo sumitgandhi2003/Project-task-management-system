@@ -1,21 +1,41 @@
 import Project from "../model/project.model.js";
 export const createProject = async (req, res, next) => {
   try {
-    const { title, description } = req.body;
-
-    // if (!title || !description) {
-    //   throw {
-    //     statusCode: 400,
-    //     message: "All fields are required!",
-    //   };
-    // }
+    const {
+      title,
+      description,
+      team = [],
+      status,
+      priority,
+      dueDate,
+    } = req.body;
     if (req.user.role !== "admin") {
       return res.status(403).json({ message: "Access denied" });
+    }
+    console.log(req.body);
+    // return;
+
+    if (
+      !title ||
+      !description ||
+      !team?.length ||
+      !status ||
+      !priority ||
+      !dueDate
+    ) {
+      throw {
+        statusCode: 400,
+        message: "All fields are required!",
+      };
     }
 
     const project = new Project({
       title,
       description,
+      assignedTo: team,
+      status: status?.trim()?.toLowerCase(),
+      priority: priority?.trim().toLowerCase(),
+      dueDate,
       createdBy: req.user._id,
     });
 
@@ -27,9 +47,38 @@ export const createProject = async (req, res, next) => {
 };
 
 export const getAllProjects = async (req, res, next) => {
+  const userId = req.user._id;
+  console.log(userId);
+  let query = {};
+
+  if (req?.user?.role !== "admin") {
+    query.assignedTo = { $in: [userId] };
+  }
   try {
-    const projects = await Project.find({}).populate("createdBy", "name email");
-    res.status(200).json({ message: "All projects", projects });
+    const projects = await Project.find(query).populate(
+      "createdBy",
+      "name email"
+    );
+
+    const grouped = {
+      "to do": [],
+      "in progress": [],
+      completed: [],
+    };
+
+    projects.forEach((project) => {
+      if (grouped[project.status]) {
+        grouped[project.status].push(project);
+      } else {
+        grouped[project.status] = [project]; // handle any new status dynamically
+      }
+    });
+
+    const formatted = Object.entries(grouped).map(([status, items]) => ({
+      status,
+      items,
+    }));
+    res.status(200).json({ message: "All projects", projects: formatted });
   } catch (error) {
     next(error);
   }

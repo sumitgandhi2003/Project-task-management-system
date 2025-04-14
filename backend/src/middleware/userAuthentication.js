@@ -6,9 +6,10 @@ const userAuthentication = async (req, res, next) => {
 
   try {
     if (!token) {
-      return res
-        .status(401)
-        .json({ message: "Access denied. No token provided." });
+      throw {
+        statusCode: 401,
+        message: "Access denied. No token provided.",
+      };
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
@@ -16,12 +17,20 @@ const userAuthentication = async (req, res, next) => {
     // console.log(decoded, "Hello");
 
     if (!decoded) {
+      throw {
+        statusCode: 401,
+        message: "Access denied. Invalid token.",
+      };
       return res.status(401).json({ message: "Access denied. Invalid token." });
     }
 
-    const user = await User.findById(decoded?.userId);
+    const user = await User.findById(decoded?.userId).select("-password -__v");
 
     if (!user) {
+      throw {
+        statusCode: 404,
+        message: "User Not Found!",
+      };
       return res.status(404).json({ message: "User not found." });
     }
 
@@ -30,7 +39,8 @@ const userAuthentication = async (req, res, next) => {
     next();
   } catch (err) {
     console.log(err?.message);
-    res.status(401).json({ message: "Token expired" });
+    next(err);
+    // res.status(401).json({ message: "Token expired" });
   }
 };
 

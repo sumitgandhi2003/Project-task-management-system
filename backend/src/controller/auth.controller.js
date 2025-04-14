@@ -22,6 +22,7 @@ export const registerUser = async (req, res, next) => {
     });
     await newUser.save();
     const token = newUser.generateToken();
+    const { _password, __v, ...withoutPassword } = newUser.toObject();
     res
       .cookie("token", token, {
         httpOnly: true,
@@ -32,6 +33,7 @@ export const registerUser = async (req, res, next) => {
       .json({
         sucess: true,
         message: "User registered successfully!",
+        userDetail: { ...withoutPassword },
       });
 
     // return res.status(201).json({
@@ -62,6 +64,7 @@ export const loginUser = async (req, res, next) => {
       throw { statusCode: 400, message: "Invalid credentials!" };
     }
     const token = isExistingUser.generateToken();
+    const filterData = isExistingUser.toObject();
     res
       .cookie("token", token, {
         httpOnly: true,
@@ -72,7 +75,27 @@ export const loginUser = async (req, res, next) => {
       .json({
         success: true,
         message: "User logged in successfully!",
+        userDetail: { ...filterData },
       });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getActiveUser = async (req, res, next) => {
+  try {
+    const user = req?.user?.toObject();
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found!",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      data: { ...user },
+      message: "Current user fetched successfully!",
+    });
   } catch (error) {
     next(error);
   }

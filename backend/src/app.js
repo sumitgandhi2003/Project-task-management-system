@@ -6,7 +6,7 @@ import projectRoute from "./routes/project.route.js";
 import errorHandler from "./middleware/errorHandler.js";
 import adminRoute from "./routes/admin.route.js";
 const app = express();
-app.use(cors({ origin: "*", credentials: true }));
+app.use(cors({ origin: process.env.CROSS_ORIGIN_URL, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));

@@ -1,5 +1,8 @@
 import Task from "../model/task.model.js";
-const createTask = async (req, res) => {};
+const createTask = async (req, res) => {
+  console.log(req);
+  res?.status(201);
+};
 const getAllTask = async (req, res) => {
   try {
     const tasks = await Task.find({}).populate("assignedTo", "name email");

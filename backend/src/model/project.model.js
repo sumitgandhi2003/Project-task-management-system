@@ -25,13 +25,13 @@ const projectSchema = new Schema(
     ],
     status: {
       type: String,
-      enum: ["Not Started", "In Progress", "Completed"],
-      default: "Not Started",
+      enum: ["to do", "in progress", "completed"],
+      default: "to do",
     },
     priority: {
       type: String,
-      enum: ["Low", "Medium", "High", "Urgent"],
-      default: "Medium",
+      enum: ["low", "medium", "high", "urgent"],
+      default: "medium",
     },
     dueDate: {
       type: Date,
