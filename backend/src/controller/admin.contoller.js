@@ -62,6 +62,15 @@ export const getTeamMemberOfProject = async (req, res, next) => {
       .populate("assignedTo", "name email")
       .select("assignedTo")
       .lean();
+    projectMemberDetail.assignedTo = projectMemberDetail.assignedTo.map(
+      (member) => ({
+        id: member._id,
+        name: member.name,
+        email: member.email,
+        value: member._id,
+      })
+    );
+
     console.log(projectMemberDetail);
     res.status(200).json({
       sucess: true,

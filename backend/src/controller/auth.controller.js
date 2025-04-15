@@ -1,8 +1,8 @@
 import User from "../model/user.model.js";
 export const registerUser = async (req, res, next) => {
   try {
-    const { name, email, password, employeeId } = req.body;
-    if (!name || !email || !password || !employeeId) {
+    const { name, email, password, employeeId, role } = req.body;
+    if (!name || !email || !password || !employeeId || !role) {
       throw {
         statusCode: 400,
         message: "All fields are required!",
@@ -19,6 +19,7 @@ export const registerUser = async (req, res, next) => {
       name,
       password,
       employeeId,
+      role,
     });
     await newUser.save();
     const token = newUser.generateToken();

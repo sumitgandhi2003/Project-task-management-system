@@ -48,12 +48,14 @@ export const createProject = async (req, res, next) => {
 
 export const getAllProjects = async (req, res, next) => {
   const userId = req.user._id;
-  console.log(userId);
+  const scope = req.query?.scope;
+  console.log(scope);
   let query = {};
 
-  if (req?.user?.role !== "admin") {
+  if (req?.user?.role !== "admin" && scope === "me") {
     query.assignedTo = { $in: [userId] };
   }
+  console.log(query);
   try {
     const projects = await Project.find(query).populate(
       "createdBy",

@@ -41,3 +41,27 @@ export const checkValidation = (data = {}, requireData) => {
   });
   return Object.keys(errors).length > 0 ? errors : false;
 };
+
+export const getStatusColor = (status) => {
+  switch (status) {
+    case "in progress":
+      return "bg-yellow-200 text-yellow-700";
+    case "to do":
+      return "bg-blue-200 text-blue-700";
+    case "completed":
+      return "bg-green-200 text-green-700";
+    default:
+      return "bg-gray-200 text-gray-700";
+  }
+};
+
+export const getPriorityColor = (priority) => {
+  switch (priority) {
+    case "high":
+      return "bg-red-100 text-red-600";
+    case "medium":
+      return "bg-yellow-100 text-yellow-600";
+    default:
+      return "bg-gray-100 text-gray-600";
+  }
+};

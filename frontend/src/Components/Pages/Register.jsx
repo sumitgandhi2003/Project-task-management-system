@@ -13,6 +13,7 @@ const Register = () => {
     email: "",
     employeeId: "",
     password: "",
+    role: "",
   });
   const [errors, setErrors] = useState({});
   const [isPasswordShow, setIsPasswordShow] = useState(false);
@@ -177,6 +178,63 @@ const Register = () => {
               </p>
             )}
           </div>
+        </div>
+        <div className="w-full mb-4 role-field">
+          <div className="flex w-full gap-2">
+            <div
+              className={`flex justify-center w-1/2 items-center gap-3  border-2 rounded ${
+                registerForm.role === "team"
+                  ? "bg-blue-500 text-white border-0"
+                  : "border-gray-200"
+              }`}
+            >
+              <Input
+                type="radio"
+                id="role-team"
+                name="role"
+                value="team"
+                checked={registerForm.role == "team"}
+                onChange={handleChange}
+                className="hidden"
+              />
+              <label
+                htmlFor="role-team"
+                className="w-full h-full p-2 cursor-pointer flex items-center justify-center"
+              >
+                Team Member
+              </label>
+            </div>
+
+            <div
+              className={`flex justify-center items-center w-1/2 gap-3  border-2 rounded ${
+                registerForm.role === "admin"
+                  ? "bg-blue-500 text-white border-0"
+                  : "border-gray-200"
+              }`}
+            >
+              <Input
+                type="radio"
+                id="role-admin"
+                name="role"
+                value="admin"
+                checked={registerForm.role === "admin"}
+                onChange={handleChange}
+                className="hidden"
+              />
+              <label
+                htmlFor="role-admin"
+                className="w-full h-full p-2 cursor-pointer flex items-center justify-center"
+              >
+                Admin
+              </label>
+            </div>
+          </div>
+
+          {errors?.role && (
+            <p className="text-red-500 text-sm font-medium mt-1">
+              {errors?.role}
+            </p>
+          )}
         </div>
 
         {/* submit button */}

@@ -24,13 +24,13 @@ const taskSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["Pending", "In Progress", "Done"],
-      default: "Pending",
+      enum: ["pending", "in progress", "done"],
+      default: "pending",
     },
     priority: {
       type: String,
-      enum: ["Low", "Medium", "High"],
-      default: "Medium",
+      enum: ["low", "medium", "high"],
+      default: "medium",
     },
     comments: [
       {

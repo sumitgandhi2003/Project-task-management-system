@@ -1,7 +1,31 @@
 import Task from "../model/task.model.js";
 const createTask = async (req, res) => {
-  console.log(req);
-  res?.status(201);
+  const { title, description, projectId, assignTo, status, priority, dueDate } =
+    req.body;
+  if (
+    [title, description, projectId, assignTo, status, priority, dueDate].some(
+      (item) => item?.trim() === ""
+    )
+  ) {
+    throw {
+      statusCode: 400,
+      message: "required field is missing",
+    };
+  }
+  const createTask = await Task({
+    title,
+    description,
+    projectId,
+    assignedTo: assignTo,
+    status,
+    priority,
+    dueDate,
+  });
+  await createTask.save();
+
+  res
+    ?.status(201)
+    .json({ sucess: true, message: "task Created", data: createTask });
 };
 const getAllTask = async (req, res) => {
   try {
