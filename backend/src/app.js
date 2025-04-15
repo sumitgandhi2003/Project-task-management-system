@@ -7,6 +7,7 @@ import errorHandler from "./middleware/errorHandler.js";
 import adminRoute from "./routes/admin.route.js";
 import taskRoute from "./routes/task.route.js";
 const app = express();
+console.log(process.env.CROSS_ORIGIN_URL);
 app.use(cors({ origin: process.env.CROSS_ORIGIN_URL, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
